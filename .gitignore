@@ -1,0 +1,13 @@
+# 构建产物
+target/
+*.jar
+dist/
+
+# 运行时数据（数据库、文件内容、密钥、日志）
+data/
+
+# IDE / 系统
+.idea/
+*.iml
+.vscode/
+.DS_Store

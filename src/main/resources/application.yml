@@ -1,0 +1,98 @@
+server:
+  port: 20020
+  address: 0.0.0.0
+  compression:
+    enabled: true
+    mime-types: application/json,text/html,text/plain,text/css,application/javascript,image/svg+xml
+    min-response-size: 1024
+
+spring:
+  application:
+    name: GreyDrive
+  datasource:
+    url: jdbc:h2:file:./data/db/greydrive;DB_CLOSE_ON_EXIT=FALSE;AUTO_SERVER=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+    hikari:
+      maximum-pool-size: 8
+      minimum-idle: 2
+      connection-timeout: 15000
+      max-lifetime: 1800000
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+          batch_size: 50
+        order_inserts: true
+        order_updates: true
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+  servlet:
+    multipart:
+      max-file-size: 2GB
+      max-request-size: 2GB
+  mvc:
+    problemdetails:
+      enabled: false
+
+greydrive:
+  data-dir: ./data
+  admin:
+    enabled: false
+    port: 80
+  chunk-size: 8388608
+  max-file-size: 2147483648
+  storage-type: local
+  security:
+    jwt-ttl: PT24H
+    refresh-ttl: P30D
+    jwt-secret-file: ./data/secrets/jwt.key
+    share-access-ttl: PT30M
+    mfa-required: true
+    mfa-challenge-ttl: PT5M
+    mfa-issuer: GreyDrive
+  upload:
+    session-ttl: PT24H
+  recycle:
+    retention: P30D
+  share:
+    code-length: 6
+    code-required: true
+    # default-ttl 省略表示分享永不过期
+  preview:
+    text-max-bytes: 1048576
+    thumbnail-sizes: 256,1024
+  pagination:
+    default-size: 20
+    max-size: 100
+  cleanup:
+    enabled: true
+    chunk-interval: PT10M
+    recycle-interval: PT1H
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+logging:
+  file:
+    name: ./data/logs/greydrive.log
+  logback:
+    rollingpolicy:
+      max-file-size: 50MB
+      max-history: 30
+      total-size-cap: 1GB
+  level:
+    root: INFO
+    com.greydrive: INFO
+  pattern:
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{36} - %msg%n"
+    console: "%d{HH:mm:ss.SSS} %-5level %logger{20} - %msg%n"
